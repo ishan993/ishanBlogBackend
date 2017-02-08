@@ -1,8 +1,11 @@
 var express = require('express');
 var config = require('./config');
 var app = express();
+
 var apiController = require('./controller/apiController');
 var userController = require('./controller/userController');
+var postController = require('./controller/PostController');
+
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 
@@ -18,5 +21,6 @@ app.get('/home', function(req, res){
 
 apiController(app);
 userController(app);
+postController(app);
 
 app.listen(3000);
