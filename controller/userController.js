@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var config = require('../config');
 var userDAO = require('../model/user');
 var jwt = require('jsonwebtoken');
+var jwtDecoder = require('jwt-decode');
 
 module.exports = function(app){
 
@@ -31,7 +31,9 @@ module.exports = function(app){
         });    
     });
 
-
+///////////////////////////////////////////
+//// Login
+//////////////////////////////////////////
 
     app.post('/login', function(req, res){
         console.log("Trying to log in :"+req.body._id);
@@ -53,14 +55,33 @@ module.exports = function(app){
         });
     });
 
-    app.get('/token', function(req, res){
-        console.log(jwt.decode(req.body.token));
-
+   
+   
+    app.post('/token', function(req, res){
+        var result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
+        console.log(result);        
         res.statusCode = 200;
         res.end("heh?");
     });
 
-   
+///////////////////////////////////////////
+//// Retrieve User info and blog posts
+//////////////////////////////////////////
+
+app.get('/user/:userId', function(req, res){
+    console.log(`The user Id is: ${req.params.userId}`);
+   userDAO.getUserInfo(req.params.userId, function(err, result){
+
+        if(err){
+            res.statusCode = err.statusCode;
+            res.json({message: err.message});
+        }else{
+            res.statusCode = 400;
+            res.json({result: result});
+        }
+    });
+    
+});
 
 
 app.post('/update', function(req, res){

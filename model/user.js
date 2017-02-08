@@ -12,6 +12,14 @@ var userSchema = new Schema({
 
 var User = mongoose.model('User', userSchema);
 
+var error  = {
+			statusCode:400,
+			messsage: ''
+		};
+
+///////////////////////////////////////////
+//// Register User
+//////////////////////////////////////////
 
 var registerUser = function(jsObj, callback){
 	var temp = User(jsObj);
@@ -25,7 +33,11 @@ var registerUser = function(jsObj, callback){
 			callback(null, savedUser);
 		}
 	});
-}
+};
+
+///////////////////////////////////////////
+//// Login user
+//////////////////////////////////////////
 
 var loginUser = function(jsObj, callback){
 	
@@ -46,11 +58,26 @@ var loginUser = function(jsObj, callback){
 	});
 }
 
-var getUser = function(jsObj){
-	User.find(jsObj,
+///////////////////////////////////////////
+//// Retrieve User info and Blog posts
+//////////////////////////////////////////
+
+
+var getUserInfo = function(userId,callback){
+	User.findById(userId,
 	 function(err, result){
-		if(!err)
-		console.log(result);
+		if(err){
+		error.statusCode = 400;
+		error.message = err.message;
+		callback(error);
+	 	}else{
+		 if(!result){
+			error.statusCode = 403;
+			error.message = "User not found"
+			callback(error);
+		 }else{
+			 callback(null, result);
+		 }}
 	});
 };
 
@@ -64,7 +91,7 @@ var updateUser = function(jsObj){
 };
 
 module.exports = {
-	getUser,
+	getUserInfo,
 	updateUser,
 	User,
 	registerUser,

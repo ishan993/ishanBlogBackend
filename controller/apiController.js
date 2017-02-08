@@ -11,7 +11,7 @@ module.exports = function(app){
     app.get('/api/user', function(req, res){
         console.log(req.body);
 
-        userDAO.getUser({firstname:'Khandelwal'});
+        userDAO.getUser({firstname:'Ishan'});
         res.sendStatus(200);
         res.end("heh?");
     });
