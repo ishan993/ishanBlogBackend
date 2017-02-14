@@ -5,8 +5,12 @@ var postDAO = require('../model/post');
 
 module.exports = function(app){
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
+
+///////////////////////////////////////////
+//// Search for a post by id
+//////////////////////////////////////////
 
     app.get('/post/:postId', function(req, res){
         var postId = req.params.postId;
@@ -23,19 +27,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
         })
     });
 
+///////////////////////////////////////////
+//// Create a new post
+//////////////////////////////////////////
+
     app.post('/post', function(req, res){
-
+    
+    try{
       var result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
-      console.log(`This post is by ${result._doc._id}`);
+    }catch(err){
+        if (result == null)
+        res.statusCode = 400;
+        res.json({message: "No token found. Please attach a valid token"});
+        return;
+    }
 
-      var postObj = {
-          userId: result._doc._id,
-          postAuthor: result._doc.firstname+" "+result._doc.lastname,
-          postDate: req.body.date,
-          postTitle: req.body.title,
-          postContent: req.body.content
-      };
-
+      console.log(`The post content is ${req.body.postContent}`);
+      var postObj = req.body;
+      postObj.userId = result._doc._id;
+      postObj.postAuthor = result._doc.firstname+" "+result._doc.lastname;
+      
+      if(req.body._id != null){
+          console.log("Just imagine that I'm updating the post");
+          res.end("got it, dude.");
+      }
       postDAO.savePost(postObj, function(err, result){
           if(err){
               res.statusCode = err.statusCode;
@@ -45,6 +60,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
               res.json({ result : result});
           }
       });
+    });
+
+///////////////////////////////////////////
+//// Search for posts by tags
+//////////////////////////////////////////
+
+    app.get('/search', function(req, res){ 
+
+        postDAO.searchPosts(req.query.tag, function(err, posts){
+
+        if(err){
+            res.statusCode = err.statusCode;
+            res.json({message: err.message});
+        }else{
+            res.statusCode = 200;
+            res.json({posts:posts});
+        }
+        });        
     });
 
 };

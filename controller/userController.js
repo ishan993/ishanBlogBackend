@@ -54,7 +54,6 @@ module.exports = function(app){
 
         });
     });
-
    
    
     app.post('/token', function(req, res){
@@ -68,28 +67,25 @@ module.exports = function(app){
 //// Retrieve User info and blog posts
 //////////////////////////////////////////
 
-app.get('/user/:userId', function(req, res){
-    console.log(`The user Id is: ${req.params.userId}`);
-
-    userDAO.getUserInfo(req.params.userId, function(err, result){
-        if(err){
-            res.statusCode = err.statusCode;
-            res.json({message: err.message});
-        }else{
-            console.log("Else1");
-            res.statusCode = 200;
-            res.json(result);
-        }
-    });
-});
-
-
-app.post('/update', function(req, res){
-        console.log(req.body);
-
-        userDAO.updateUser(req.body);
-        res.sendStatus(200);
+    app.get('/user/:userId', function(req, res){
+        userDAO.getUserInfo(req.params.userId, function(err, result){
+            if(err){
+                res.statusCode = err.statusCode;
+                res.json({message: err.message});
+            }else{
+                console.log("Else1");
+                res.statusCode = 200;
+                res.json(result);
+            }
+        });
     });
 
 
+
+    app.post('/update', function(req, res){
+           console.log(req.body);
+
+            userDAO.updateUser(req.body);
+           res.sendStatus(200);
+     });
 };
