@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var user = require('../model/user');
 
 var Schema = mongoose.Schema;
 
@@ -18,7 +19,6 @@ var error = {
 };
 
 var getPost = function(jsObj, callback){
-
     Post.findById(jsObj, function(err, result){
         if(err){
             error.statusCode = 400;
@@ -50,8 +50,27 @@ var savePost = function(jsObj, callback){
     })
 }
 
-module.exports = {
+var getPostsByAuthor =  function(userId, callback){
 
+    Post.find({userId:userId}, function(err, result){
+        if(err){
+            console.log("I got this error: "+err.message);
+            var error = {
+                statusCode: 404,
+                message: err.message
+                };
+            callback(error);
+        }
+        if(result){
+            console.log("Returning this:" + result[0] );
+            callback(null, result);
+        }
+    });
+
+}
+
+module.exports = {
+    getPostsByAuthor,
     savePost,
     getPost    
 };

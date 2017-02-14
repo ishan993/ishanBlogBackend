@@ -70,17 +70,17 @@ module.exports = function(app){
 
 app.get('/user/:userId', function(req, res){
     console.log(`The user Id is: ${req.params.userId}`);
-   userDAO.getUserInfo(req.params.userId, function(err, result){
 
+    userDAO.getUserInfo(req.params.userId, function(err, result){
         if(err){
             res.statusCode = err.statusCode;
             res.json({message: err.message});
         }else{
-            res.statusCode = 400;
-            res.json({result: result});
+            console.log("Else1");
+            res.statusCode = 200;
+            res.json(result);
         }
     });
-    
 });
 
 

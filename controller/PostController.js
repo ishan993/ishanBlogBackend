@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
                 res.json({message: result});
             }
         })
-
     });
 
     app.post('/post', function(req, res){

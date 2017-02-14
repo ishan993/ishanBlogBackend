@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
-
+var postDAO = require('../model/post');
+var promise = require('promise');
 var Schema = mongoose.Schema;
+var async = require('async');
 
 var userSchema = new Schema({
 	_id: String,
@@ -62,24 +64,43 @@ var loginUser = function(jsObj, callback){
 //// Retrieve User info and Blog posts
 //////////////////////////////////////////
 
-
 var getUserInfo = function(userId,callback){
-	User.findById(userId,
-	 function(err, result){
+	var response;
+	var postInfo;
+	var userInfo;
+
+	User.findOne({_id:userId}, function(err, user){
 		if(err){
-		error.statusCode = 400;
-		error.message = err.message;
-		callback(error);
-	 	}else{
-		 if(!result){
-			error.statusCode = 403;
-			error.message = "User not found"
+			console.log(err);
+			error.statusCode = 400;
+			error.message = err.message;
 			callback(error);
-		 }else{
-			 callback(null, result);
-		 }}
-	});
-};
+		}else{
+			console.log(user);
+			if(user._id == null){
+				error.statusCode = 404;
+				error.message = "User not found";
+				callback(error);
+			}else{
+				postDAO.getPostsByAuthor(userId, function(err, posts){
+					if(err){
+						error.statusCode = 404;
+						error.message = err.message;
+						callback(err);						
+					}else{
+						var response = {
+							userData: user,
+							postData: posts
+						}
+					}
+					callback(null, response);
+				});
+			}
+		}
+	})
+}
+
+
 
 var updateUser = function(jsObj){
 
