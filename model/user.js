@@ -1,8 +1,6 @@
 var mongoose = require('mongoose');
 var postDAO = require('../model/post');
-var promise = require('promise');
 var Schema = mongoose.Schema;
-var async = require('async');
 
 var userSchema = new Schema({
 	_id: String,

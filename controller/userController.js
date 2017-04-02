@@ -25,7 +25,7 @@ module.exports = function(app){
             else{
             
             res.json({status: "You're good."});
-            res.statusCode = 200;
+            res.statusCode = 400;
             console.log(result);
             }
         });    

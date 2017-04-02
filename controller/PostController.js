@@ -50,6 +50,7 @@ module.exports = function(app){
       if(req.body._id != null){
           console.log("Just imagine that I'm updating the post");
           res.end("got it, dude.");
+          return;
       }
       postDAO.savePost(postObj, function(err, result){
           if(err){
