@@ -4,17 +4,20 @@
   "description": "API for a todo App created using NodeJs",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "async": "^2.1.4",
+    "cors": "^2.8.3",
     "ejs": "^2.5.5",
     "express": "^4.14.1",
     "jsonwebtoken": "^7.2.1",
     "jwt-decode": "^2.1.0",
     "mongoose": "^4.8.1",
+    "multer": "^1.3.0",
     "promise": "^7.1.1"
   }
 }

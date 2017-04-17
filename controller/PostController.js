@@ -5,8 +5,7 @@ var postDAO = require('../model/post');
 
 module.exports = function(app){
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+   
 
 ///////////////////////////////////////////
 //// Search for a post by id
@@ -33,19 +32,21 @@ module.exports = function(app){
 
     app.post('/post', function(req, res){
     
-    try{
+  /*  try{
       var result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
     }catch(err){
         if (result == null)
         res.statusCode = 400;
         res.json({message: "No token found. Please attach a valid token"});
         return;
-    }
+    }*/
 
       console.log(`The post content is ${req.body.postContent}`);
       var postObj = req.body;
-      postObj.userId = result._doc._id;
-      postObj.postAuthor = result._doc.firstname+" "+result._doc.lastname;
+      postObj.userId = req.body.userId;
+      postObj.postAuthor = req.body.postAuthor;
+     /* postObj.userId = result._doc._id;
+      postObj.postAuthor = result._doc.firstname+" "+result._doc.lastname;*/
       
       if(req.body._id != null){
           console.log("Just imagine that I'm updating the post");
