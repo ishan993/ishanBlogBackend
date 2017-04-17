@@ -47,7 +47,10 @@ app.get('/fetchpost/:postId', function(req, res, next){
     res.statusCode = 200;
     res.json(responseJSON);
 });
-
+app.get('/hello', (req, res)=>{
+    res.statusCode = 200;
+    res.end("Hello");
+})
 app.post('/store',upload.single(), function(req, res, next){
     //storage._handleFile(req.file);
     console.log("Here's the file"+req.file);
