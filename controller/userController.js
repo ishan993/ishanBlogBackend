@@ -14,7 +14,7 @@ module.exports = function(app){
 //// Registeration
 //////////////////////////////////////////
 
-    app.post('/register', function(req, res){
+    app.post('/signup', function(req, res){
         
         userDAO.registerUser(req.body, function(err, result){
             if (err){
@@ -36,8 +36,9 @@ module.exports = function(app){
 //////////////////////////////////////////
 
     app.post('/login', function(req, res){
-        console.log("Trying to log in :"+req.body._id);
-
+        console.log("Trying to log in :"+JSON.stringify(req.body));
+        res.json({hello: "I got it!"});
+        return;
         userDAO.loginUser(req.body, function(err, result){
             if(err){
                 res.statusCode = (err.statusCode || 400);
