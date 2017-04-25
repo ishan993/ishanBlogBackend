@@ -15,7 +15,8 @@ module.exports = function(app){
 //////////////////////////////////////////
 
     app.post('/signup', function(req, res){
-        
+        console.log("Trying to sign up:"+JSON.stringify(req.body.password));
+      
         userDAO.registerUser(req.body, function(err, result){
             if (err){
                 console.error(err);
@@ -23,9 +24,8 @@ module.exports = function(app){
                 res.json(err.message);
             }
             else{
-            
-            res.json({status: "You're good."});
-            res.statusCode = 400;
+            res.statusCode = 201;
+            res.json(result);
             console.log(result);
             }
         });    
@@ -35,10 +35,8 @@ module.exports = function(app){
 //// Login
 //////////////////////////////////////////
 
-    app.post('/login', function(req, res){
-        console.log("Trying to log in :"+JSON.stringify(req.body));
-        res.json({hello: "I got it!"});
-        return;
+    app.post('/login', function(req, res){    
+        console.log("Login controller"+JSON.stringify(req.body));    
         userDAO.loginUser(req.body, function(err, result){
             if(err){
                 res.statusCode = (err.statusCode || 400);

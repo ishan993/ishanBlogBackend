@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
 	_id: String,
-	firstname: String,
-	lastname: String,
+	firstName: String,
+	lastName: String,
     password: String
 });
 
@@ -23,6 +23,7 @@ var error  = {
 
 var registerUser = function(jsObj, callback){
 	var temp = User(jsObj);
+	temp._id = jsObj.email.toLowerCase();
 	temp.save(function(err, savedUser){
 
 		if(err){
@@ -41,14 +42,15 @@ var registerUser = function(jsObj, callback){
 
 var loginUser = function(jsObj, callback){
 	
-	User.findById(jsObj._id, function(err, result){
+	User.findById(jsObj.email, function(err, result){
 		if(err){
 			console.log(err);
 			callback({statusCode: 400,
 				message: err.message});
 		}else{
-			if(jsObj.password != result.password){
-				callback({statusCode:403,
+			console.log("This is the result: "+JSON.stringify(jsObj));
+			if(!result || jsObj.password != result.password){
+				callback({statusCode:401,
 					message: "Incorrect id/password combination"});
 				console.log("Password incorrect");
 			}else{
