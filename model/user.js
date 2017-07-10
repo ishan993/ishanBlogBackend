@@ -81,27 +81,24 @@ export const getUserInfo = (userId, callback) => {
       error.statusCode = 400;
       error.message = err.message;
       callback(error);
+    } else if (user._id === undefined) {
+      error.statusCode = 404;
+      error.message = 'User not found';
+      callback(error);
     } else {
-      console.log(user);
-      if (user._id == null) {
-        error.statusCode = 404;
-        error.message = 'User not found';
-        callback(error);
-      } else {
-        postDAO.getPostsByAuthor(userId, (err, posts) => {
-          if (err) {
-            error.statusCode = 404;
-            error.message = err.message;
-            callback(err);
-          } else {
-            const response = {
-              userData: user,
-              postData: posts,
-            };
-            callback(null, response);
-          }
-        });
-      }
+      postDAO.getPostsByAuthor(userId, (err, posts) => {
+        if (err) {
+          error.statusCode = 404;
+          error.message = err.message;
+          callback(err);
+        } else {
+          const response = {
+            userData: user,
+            postData: posts,
+          };
+          callback(null, response);
+        }
+      });
     }
   });
 };
