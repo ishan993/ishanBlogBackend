@@ -3,7 +3,7 @@ import jwtDecoder from 'jwt-decode';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import { dbConfig } from './config';
-// import apiController from './controller/ApiController';
+import apiController from './controller/ApiController';
 import userController from './controller/UserController';
 import postController from './controller/PostController';
 
