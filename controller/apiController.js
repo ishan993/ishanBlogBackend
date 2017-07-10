@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import config from '../config';
 
-var userDAO = require('../model/user');
+const userDAO = require('../model/user');
 
 export default (app) => {
   app.use(bodyParser.json());

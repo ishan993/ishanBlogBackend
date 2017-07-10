@@ -11,7 +11,6 @@ const userSchema = new Schema({
   password: String,
 });
 
-
 export const User = mongoose.model('User', userSchema);
 
 const error = {
@@ -22,11 +21,11 @@ const error = {
 // /////////////////////////////////////////
 // // Register User
 // ////////////////////////////////////////
-
 export const registerUser = (jsObj, callback) => {
-  const temp = User(jsObj);
-  temp._id = jsObj.email.toLowerCase();
-  temp.save((err, savedUser) => {
+  const user = User(jsObj);
+  user._id = jsObj.email.toLowerCase();
+  user.save((err, result) => {
+    const savedUser = result.toJSON();
     let message = '';
     if (err) {
       if (err.code === 11000) {
@@ -40,6 +39,7 @@ export const registerUser = (jsObj, callback) => {
       };
       callback(error);
     } else {
+      savedUser.password = undefined;
       callback(null, savedUser);
     }
   });
@@ -48,28 +48,25 @@ export const registerUser = (jsObj, callback) => {
 // /////////////////////////////////////////
 // // Login user
 // ////////////////////////////////////////
-
 export const loginUser = (jsObj, callback) => {
   User.findById(jsObj.email, (err, result) => {
     if (err) {
       console.log(err);
       callback({
         statusCode: 400,
-        message: err.message});
+        message: err.message,
+      });
+    } else if (!result || jsObj.password !== result.password) {
+      callback({
+        statusCode: 401,
+        message: 'Incorrect id/password combination',
+      });
+      console.log('Password incorrect');
     } else {
-      console.log('This is the result: ' + JSON.stringify(jsObj));
-      if (!result || jsObj.password != result.password) {
-        callback({
-          statusCode: 401,
-          message: 'Incorrect id/password combination',
-        });
-        console.log('Password incorrect');
-      } else {
-        callback(null, {
-          message: jsObj._id + 'Successfully logged in!',
-          user: result,
-        });
-      }
+      const user = result.toJSON();
+      user.password = undefined;
+      console.log('I got this user: ' + JSON.stringify(user));
+      callback(null, { user });
     }
   });
 };
@@ -77,9 +74,8 @@ export const loginUser = (jsObj, callback) => {
 // /////////////////////////////////////////
 // // Retrieve User info and Blog posts
 // ////////////////////////////////////////
-
 export const getUserInfo = (userId, callback) => {
-  User.findOne({ _id:userId }, (err, user) => {
+  User.findOne({ _id: userId }, (err, user) => {
     if (err) {
       console.log(err);
       error.statusCode = 400;
@@ -92,7 +88,7 @@ export const getUserInfo = (userId, callback) => {
         error.message = 'User not found';
         callback(error);
       } else {
-        postDAO.getPostsByAuthor(userId, function(err, posts){
+        postDAO.getPostsByAuthor(userId, (err, posts) => {
           if (err) {
             error.statusCode = 404;
             error.message = err.message;

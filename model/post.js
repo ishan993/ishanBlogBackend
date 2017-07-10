@@ -73,7 +73,7 @@ export const getPostsByAuthor = (userId, callback) => {
   });
 };
 
-export const searchPosts = (searchString, callback) => {    
+export const searchPosts = (searchString, callback) => {
   Post.find({ tags: searchString }, (err, posts) => {
     console.log(searchString);
     if (err) {

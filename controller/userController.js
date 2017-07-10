@@ -1,30 +1,38 @@
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import jwtDecoder from 'jwt-decode';
-import config from '../config';
+import { config } from '../config';
+import { sendRegistrationConfirmation } from '../service/EmailService';
 
-
-var userDAO = require('../model/user');
+const userDAO = require('../model/user');
 
 export default (app) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
+
+  app.post('/test', (req, res) => {
+    console.log('I got this' + JSON.stringify(config));
+  });
+
 // /////////////////////////////////////////
 // // Registeration
 // ////////////////////////////////////////
-
-  app.post('/signup', (req, res) => {
-    console.log('trying to sign up:' + JSON.stringify(req.body.password));
-
+  app.post('/user', (req, res) => {
     userDAO.registerUser(req.body, (err, result) => {
       if (err) {
         console.error(err);
         res.statusCode = err.statusCode;
         res.json({ message: err.message });
       } else {
+        const token = jwt.sign(result, config.secret, {
+          expiresIn: '2 days', // expires in 24 hours
+        });
+        result.token = token;
+        console.log('I got this token: ' + JSON.stringify(result));
         res.statusCode = 201;
-        res.json(result);
+        res.json({ data: result });
+        sendRegistrationConfirmation(result);
         console.log(result);
       }
     });
@@ -33,33 +41,23 @@ export default (app) => {
 // /////////////////////////////////////////
 // // Login
 // ////////////////////////////////////////
-
   app.post('/login', (req, res) => {
-    console.log('Login controller' + JSON.stringify(req.body));
     userDAO.loginUser(req.body, (err, result) => {
       if (err) {
         res.statusCode = (err.statusCode || 400);
         res.json({ message: err.message });
       } else {
         res.statusCode = 200;
-        const token = jwt.sign(result.user, config.configJSON.secret, {
+        const token = jwt.sign(result.user, config.secret, {
           expiresIn: 1440, // expires in 24 hours
         });
-
         res.json({
           status: "You're good.",
+          data: result,
           token,
         });
       }
     });
-  });
-
-
-  app.post('/token', (req, res) => {
-    const result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
-    console.log(result);
-    res.statusCode = 200;
-    res.end('heh?');
   });
 
 // /////////////////////////////////////////

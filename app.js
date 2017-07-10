@@ -1,12 +1,11 @@
 import express from 'express';
 import jwtDecoder from 'jwt-decode';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 import { dbConfig } from './config';
-import apiController from './controller/apiController';
-import userController from './controller/userController';
-
-var postController = require('./controller/PostController');
-var bodyParser = require('body-parser');
+import apiController from './controller/ApiController';
+import userController from './controller/UserController';
+import postController from './controller/PostController';
 
 const app = express();
 app.set('view engine', 'ejs');

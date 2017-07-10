@@ -1,7 +1,4 @@
-import bodyParser from 'body-parser';
-import jwtDecoder from 'jwt-decode';
-
-var postDAO = require('../model/post');
+const postDAO = require('../model/post');
 
 export default (app) => {
 // /////////////////////////////////////////
