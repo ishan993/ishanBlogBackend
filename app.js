@@ -3,8 +3,8 @@ import jwtDecoder from 'jwt-decode';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import { dbConfig } from './config';
-import { apiController } from './controller/ApiController';
-import { userController } from './controller/UserController';
+import { apiController } from './controller/apiController';
+import { userController } from './controller/userController';
 import { postController } from './controller/PostController';
 
 const app = express();
