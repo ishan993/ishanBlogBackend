@@ -3,7 +3,7 @@ import config from '../config';
 
 const userDAO = require('../model/user');
 
-export default (app) => {
+export const apiController = (app) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 

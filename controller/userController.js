@@ -6,7 +6,7 @@ import { sendRegistrationConfirmation } from '../service/EmailService';
 
 const userDAO = require('../model/user');
 
-export default (app) => {
+export const userController = (app) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 

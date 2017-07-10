@@ -1,6 +1,6 @@
 const postDAO = require('../model/post');
 
-export default (app) => {
+export const postController = (app) => {
 // /////////////////////////////////////////
 // // Search for a post by id
 // ////////////////////////////////////////
