@@ -5,14 +5,16 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js --exec babel-node --presets es2015,stage-2"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "async": "^2.1.4",
+    "body-parser": "^1.17.2",
     "cors": "^2.8.3",
     "ejs": "^2.5.5",
+    "eslint-rules-nodejs": "^1.0.0",
     "express": "^4.14.1",
     "jsonwebtoken": "^7.2.1",
     "jwt-decode": "^2.1.0",
@@ -20,5 +22,15 @@
     "multer": "^1.3.0",
     "nodemon": "^1.11.0",
     "promise": "^7.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.2",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0"
   }
 }

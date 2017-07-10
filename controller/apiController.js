@@ -1,27 +1,22 @@
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var config = require('../config');
+import bodyParser from 'body-parser';
+import config from '../config';
+
 var userDAO = require('../model/user');
 
-module.exports = function(app){
+export default (app) => {
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+  app.get('/api/user', (req, res) => {
+    console.log(req.body);
 
-    app.get('/api/user', function(req, res){
-        console.log(req.body);
+    userDAO.getUser({ firstname: 'Ishan' });
+    res.sendStatus(200);
+    res.end('heh?');
+  });
 
-        userDAO.getUser({firstname:'Ishan'});
-        res.sendStatus(200);
-        res.end("heh?");
-    });
-
-
-    app.post('/api/register', function(req, res){        
-
-        userDAO.saveUser(req.body);
-        res.sendStatus(200);
-    });
-
-
+  app.post('/api/register', (req, res) => {
+    userDAO.saveUser(req.body);
+    res.sendStatus(200);
+  });
 };

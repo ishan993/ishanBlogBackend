@@ -1,46 +1,57 @@
-var express = require('express');
-var config = require('./config');
-var app = express();
+import express from 'express';
+import jwtDecoder from 'jwt-decode';
+import mongoose from 'mongoose';
+import { dbConfig } from './config';
+import apiController from './controller/apiController';
+import userController from './controller/userController';
 
-var apiController = require('./controller/apiController');
-var userController = require('./controller/userController');
 var postController = require('./controller/PostController');
 var bodyParser = require('body-parser');
 
-var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
+const app = express();
 app.set('view engine', 'ejs');
 
-console.log(`mongodb://${config.mongoConfig.username}:${config.mongoConfig.password}@${config.mongoConfig.dbAddress}`);
-mongoose.connect(`mongodb://${config.mongoConfig.username}:${config.mongoConfig.password}@${config.mongoConfig.dbAddress}`, {
+console.log(`mongodb://${dbConfig.username}:${dbConfig.password}@${dbConfig.dbAddress}`);
+
+mongoose.connect(`mongodb://${dbConfig.username}:${dbConfig.password}@${dbConfig.dbAddress}`, {
   server: {
     socketOptions: {
       socketTimeoutMS: 0,
-      connectionTimeout: 0
-}}});
-app.use(bodyParser.json({limit: '50mb', parameterLimit: 1000000}));
-app.use(bodyParser.urlencoded({limit: '50mb', parameterLimit: 1000000, extended: true}));
-
-var responseJSON='';
-
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-})
-
-app.get('/home', function(req, res, next){
-    res.render('index',{Message:'Hello'});
+      connectionTimeout: 0,
+    },
+  },
 });
-app.get('/hello', (req, res)=>{
-    res.statusCode = 200;
-    res.end("Hello");
-})
+
+app.use(bodyParser.json({ limit: '50mb', parameterLimit: 1000000 }));
+app.use(bodyParser.urlencoded({ limit: '50mb', parameterLimit: 1000000, extended: true }));
+
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+
+app.get('/hello', (req, res) => {
+  try {
+    const result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
+    console.log("Here's your token: " + JSON.stringify(result));
+    if (result === undefined) {
+      res.statusCode = 400;
+    }
+    /* postObj.userId = result._doc._id;
+    postObj.postAuthor = result._doc.firstname+" "+result._doc.lastname;*/
+  } catch (err) {
+    console.log(' I got this error: ' + err);
+    res.json({ message: 'No token found. Please attach a valid token' });
+  }
+});
 
 
 apiController(app);
 userController(app);
 postController(app);
 
-app.listen(process.env.PORT || 3000)
+app.listen(process.env.PORT || 3000);
