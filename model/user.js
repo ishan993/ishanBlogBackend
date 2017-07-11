@@ -25,7 +25,6 @@ export const registerUser = (jsObj, callback) => {
   const user = User(jsObj);
   user._id = jsObj.email.toLowerCase();
   user.save((err, result) => {
-    const savedUser = result.toJSON();
     let message = '';
     if (err) {
       if (err.code === 11000) {
@@ -39,6 +38,7 @@ export const registerUser = (jsObj, callback) => {
       };
       callback(error);
     } else {
+      const savedUser = result.toJSON();
       savedUser.password = undefined;
       callback(null, savedUser);
     }

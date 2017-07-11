@@ -32,7 +32,7 @@ export const userController = (app) => {
         console.log('I got this token: ' + JSON.stringify(result));
         res.statusCode = 201;
         res.json({ data: result });
-        sendRegistrationConfirmation(result);
+        // sendRegistrationConfirmation(result);
         console.log(result);
       }
     });

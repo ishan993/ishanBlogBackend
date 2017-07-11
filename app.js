@@ -2,6 +2,7 @@ import express from 'express';
 import jwtDecoder from 'jwt-decode';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import { dbConfig } from './config';
 import { apiController } from './controller/apiController';
 import { userController } from './controller/userController';
@@ -20,11 +21,10 @@ mongoose.connect(`mongodb://${dbConfig.username}:${dbConfig.password}@${dbConfig
     },
   },
 });
-
 app.use(bodyParser.json({ limit: '50mb', parameterLimit: 1000000 }));
 app.use(bodyParser.urlencoded({ limit: '50mb', parameterLimit: 1000000, extended: true }));
 
-
+app.use(cors());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
