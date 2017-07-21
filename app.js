@@ -6,7 +6,7 @@ import cors from 'cors';
 import { dbConfig } from './config';
 import { apiController } from './controller/apiController';
 import { userController } from './controller/userController';
-import { postController } from './controller/PostController';
+import { postController } from './controller/postController';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -32,18 +32,17 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.get('/hello', (req, res) => {
   try {
     const result = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
-    console.log("Here's your token: " + JSON.stringify(result));
+    console.log('Here\'s your token: ' + JSON.stringify(result));
     if (result === undefined) {
       res.statusCode = 400;
     }
     /* postObj.userId = result._doc._id;
     postObj.postAuthor = result._doc.firstname+" "+result._doc.lastname;*/
   } catch (err) {
-    console.log(' I got this error: ' + err);
+    console.log('I got this error: ' + err);
     res.json({ message: 'No token found. Please attach a valid token' });
   }
 });

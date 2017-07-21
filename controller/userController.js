@@ -10,11 +10,6 @@ export const userController = (app) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
-
-  app.post('/test', (req, res) => {
-    console.log('I got this' + JSON.stringify(config));
-  });
-
 // /////////////////////////////////////////
 // // Registeration
 // ////////////////////////////////////////

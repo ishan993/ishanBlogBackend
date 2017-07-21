@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export const postSchema = new Schema({
-  tags: [String],
+  _id: String,
+  categories: [String],
   userId: String,
   postDate: Date,
   postTitle: String,
@@ -16,6 +17,19 @@ export const Post = mongoose.model('Post', postSchema);
 let error = {
   statusCode: 400,
   message: '',
+};
+
+export const getAllPosts = (pageNumber, callback) => {
+  Post.find({}, (err, result) => {
+    if (err) {
+      console.log('Error getting all posts' + err.message);
+      error.statusCode = 400;
+      error.message = err.message;
+      callback(error);
+    } else {
+      callback(null, result);
+    }
+  });
 };
 
 export const getPost = (jsObj, callback) => {
@@ -35,6 +49,7 @@ export const getPost = (jsObj, callback) => {
 };
 
 export const savePost = (jsObj, callback) => {
+  jsObj._id = Date.now();
   const post = Post(jsObj);
   post.save((err, result) => {
     if (err) {
