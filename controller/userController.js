@@ -24,9 +24,8 @@ export const userController = (app) => {
           expiresIn: '2 days', // expires in 24 hours
         });
         result.token = token;
-        console.log('I got this token: ' + JSON.stringify(result));
         res.statusCode = 201;
-        res.json({ data: result });
+        res.json({ result });
         // sendRegistrationConfirmation(result);
         console.log(result);
       }
@@ -43,14 +42,11 @@ export const userController = (app) => {
         res.json({ message: err.message });
       } else {
         res.statusCode = 200;
-        const token = jwt.sign(result.user, config.secret, {
-          expiresIn: 1440, // expires in 24 hours
+        const token = jwt.sign(result, config.secret, {
+          expiresIn: '7d',
         });
-        res.json({
-          status: "You're good.",
-          data: result,
-          token,
-        });
+        result.token = token;
+        res.json({ result });
       }
     });
   });
@@ -72,6 +68,17 @@ export const userController = (app) => {
     });
   });
 
+  app.post('/token', (req, res) => {
+    try {
+      const user = jwtDecoder(req.body.token || req.query.token || req.headers['x-access-token']);
+      console.log('token Okay!');
+      res.json({ user });
+    } catch (err) {
+      console.log('I got this token error: ' + err);
+      res.statusCode = 400;
+      res.json({ message: 'No token found. Please attach a valid token' });
+    }
+  });
   app.post('/update', (req, res) => {
     console.log(req.body);
 

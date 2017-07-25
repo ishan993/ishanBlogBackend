@@ -1,15 +1,18 @@
 import mongoose from 'mongoose';
+import moment from 'moment';
 
 const Schema = mongoose.Schema;
 
 export const postSchema = new Schema({
-  _id: String,
   categories: [String],
   userId: String,
-  postDate: Date,
+  postTitleImageURL: String,
+  postDate: Number,
   postTitle: String,
-  postAuthor: String,
+  postAuthorId: String,
+  postAuthorName: String,
   postContent: String,
+  postDescription: String,
 });
 
 export const Post = mongoose.model('Post', postSchema);
@@ -19,7 +22,8 @@ let error = {
   message: '',
 };
 
-export const getAllPosts = (pageNumber, callback) => {
+// will implement pagination later!
+export const getAllPosts = (callback) => {
   Post.find({}, (err, result) => {
     if (err) {
       console.log('Error getting all posts' + err.message);
@@ -43,13 +47,13 @@ export const getPost = (jsObj, callback) => {
       error.message = 'The requested post could not be found';
       callback(error);
     } else {
-      callback(null, { result });
+      callback(null, result);
     }
   });
 };
 
 export const savePost = (jsObj, callback) => {
-  jsObj._id = Date.now();
+  jsObj.postDate = moment();
   const post = Post(jsObj);
   post.save((err, result) => {
     if (err) {

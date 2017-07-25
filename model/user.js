@@ -66,7 +66,7 @@ export const loginUser = (jsObj, callback) => {
       const user = result.toJSON();
       user.password = undefined;
       console.log('I got this user: ' + JSON.stringify(user));
-      callback(null, { user });
+      callback(null, user);
     }
   });
 };
