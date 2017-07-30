@@ -80,7 +80,7 @@ export const updatePost = (jsObj, callback) => {
 };
 
 export const getPostsByAuthor = (userId, callback) => {
-  Post.find({ userId: userId }, (err, result) => {
+  Post.find({ postAuthorId: userId }, (err, result) => {
     if (err) {
       console.log('I got this error: ' + err.message);
       const error = {

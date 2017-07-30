@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   _id: String,
+  email: String,
   firstName: String,
   lastName: String,
   password: String,
@@ -23,7 +24,8 @@ const error = {
 // ////////////////////////////////////////
 export const registerUser = (jsObj, callback) => {
   const user = User(jsObj);
-  user._id = jsObj.email.toLowerCase();
+  user._id = 'u' + Date.now();
+  user.email = jsObj.email.toLowerCase();
   user.save((err, result) => {
     let message = '';
     if (err) {
@@ -49,14 +51,14 @@ export const registerUser = (jsObj, callback) => {
 // // Login user
 // ////////////////////////////////////////
 export const loginUser = (jsObj, callback) => {
-  User.findById(jsObj.email, (err, result) => {
+  User.findOne({ email: jsObj.email }, (err, result) => {
     if (err) {
       console.log(err);
       callback({
         statusCode: 400,
         message: err.message,
       });
-    } else if (!result || jsObj.password !== result.password) {
+    } else if (result === undefined || jsObj.password !== result.password) {
       callback({
         statusCode: 401,
         message: 'Incorrect id/password combination',
@@ -86,15 +88,18 @@ export const getUserInfo = (userId, callback) => {
       error.message = 'User not found';
       callback(error);
     } else {
-      postDAO.getPostsByAuthor(userId, (err, posts) => {
+      console.log('I got this user: ' + JSON.stringify(user));
+      postDAO.getPostsByAuthor(user._id, (err, posts) => {
         if (err) {
           error.statusCode = 404;
           error.message = err.message;
           callback(err);
         } else {
+          const userData = user.toJSON();
+          delete userData.password;
           const response = {
-            userData: user,
-            postData: posts,
+            userData,
+            userPosts: posts,
           };
           callback(null, response);
         }

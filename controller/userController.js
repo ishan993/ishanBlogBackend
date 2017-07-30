@@ -63,7 +63,7 @@ export const userController = (app) => {
       } else {
         console.log('Else1');
         res.statusCode = 200;
-        res.json(result);
+        res.json({ result });
       }
     });
   });

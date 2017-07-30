@@ -1,5 +1,4 @@
 import jwtDecoder from 'jwt-decode';
-import moment from 'moment';
 
 const postDAO = require('../model/post');
 
