@@ -4,10 +4,11 @@ import moment from 'moment';
 const Schema = mongoose.Schema;
 
 export const postSchema = new Schema({
-  categories: [String],
+  _id: String,
   userId: String,
+  categories: [String],
   postTitleImageURL: String,
-  postDate: Number,
+  postDate: String,
   postTitle: String,
   postAuthorId: String,
   postAuthorName: String,
@@ -54,11 +55,14 @@ export const getPost = (jsObj, callback) => {
 
 export const savePost = (jsObj, callback) => {
   jsObj.postDate = moment();
+  jsObj._id = Date.now().toString();
   const post = Post(jsObj);
+  console.log(JSON.stringify(Date.now().toString()));
   post.save((err, result) => {
     if (err) {
       error.statusCode = 400;
       error.message = err.message;
+      console.log('I got this error post: ' + err.message);
       callback(error);
     } else {
       callback(null, result);

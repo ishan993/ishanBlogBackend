@@ -1,4 +1,5 @@
 import jwtDecoder from 'jwt-decode';
+import moment from 'moment';
 
 const postDAO = require('../model/post');
 
@@ -38,6 +39,7 @@ export const postController = (app) => {
         if (err) {
           res.statusCode = err.statusCode;
           res.json({ message: err.message });
+          console.log('I got this error: ' + err.message);
         } else {
           console.log('Here\'s the newly saved Post:' + JSON.stringify(result));
           res.statusCode = 200;
